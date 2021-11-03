@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StylesButton } from "./styles";
 
 interface PropsButton {
@@ -5,8 +6,10 @@ interface PropsButton {
 }
 
 export function Button({ name }: PropsButton) {
+  const [active, setActive] = useState(false);
+
   return (
-    <StylesButton>
+    <StylesButton onClick={()=> setActive(!active)} color={active ? "x" : ""}>
       <span className="text">{name}</span>
     </StylesButton>
   );

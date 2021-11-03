@@ -1,33 +1,35 @@
 import styled from "styled-components";
 import px2vw from "../../utils/px2vw";
 
-
 export const StylesButton = styled.a`
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 13rem;
-  padding: 2rem;
-  height: 3rem;
-  margin: 1rem;
-  border: .15rem solid rgba(255, 255, 255, 1);
-  background-color:${props=>props.color?'white':'transparent'};
-  font-size:1.5rem;
+  width: 4rem;
+  height: 2rem;
+  margin: 0.2rem;
+  border: 0.15rem solid rgba(255, 255, 255, 1);
+  font-size: 1.5rem;
+  border-color: ${(props) => (props.color ? "#7bdc78" : "white")};
+  color: ${(props) => (props.color ? "#7bdc78" : "white")};
   border-radius: 10px;
   text-align: center;
   font-weight: bold;
   cursor: pointer;
 
   @media (min-width: 768px) {
-        font-size: ${px2vw(18)};
-        width: 10rem;
-        padding: 10px;
-      }
+    font-size: ${px2vw(18)};
+    padding: 10px;
+  }
+
+  @media (max-width: 768px) {
+    height: 4rem;
+  }
 
   span {
     position: relative;
-    color:${props=>props.color?'#7bdc78':'transparent'};
+    color: ${(props) => (props.color ? "#7bdc78" : "transparent")};
     background-image: linear-gradient(
       90deg,
       #7bdc78 0%,
@@ -43,27 +45,9 @@ export const StylesButton = styled.a`
     transition: background-position 300ms;
   }
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 1);
-    transform-origin: 100% 0;
-    transform: scale3d(0, 1, 1);
-    transition: transform 300ms;
-  }
-
   &:hover {
     .text {
       background-position: 0 0;
-    }
-
-    &::before {
-      transform-origin: 0 0;
-      transform: scale3d(1, 1, 1);
     }
   }
 `;

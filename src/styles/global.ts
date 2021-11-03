@@ -8,7 +8,7 @@ export const Global = createGlobalStyle`
     box-sizing: border-box;
     
     body{ 
-        background: linear-gradient(15deg, #13a221 0%, #80d093) ;
+        background: linear-gradient(15deg, #111 0%, #122222) ;
     }
   }
   :root {
