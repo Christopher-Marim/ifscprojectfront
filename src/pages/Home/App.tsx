@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "../../components/Button/button";
-
-import image from "../../assets/logo.png";
-
 import { Container, Main, Wrapper } from "./styles";
 import { Prateleira } from "../../components/Prateleira/prateleira";
 import api from "../../service/api";
+import image from "../../assets/logo.png";
 
 interface rotaProps {
   linha: number;
@@ -19,14 +17,8 @@ interface responseRota {
   x: number;
   y: number;
 }
-interface ResultApi {
-  robo: string;
-  coordenadasRobo: Coord;
-  rota: rotaProps[];
-}
 
 export function App() {
-  const [active, setActive] = useState(false);
   const [currentSearch, setCurrentSearch] = useState<string>();
   const [currentShelf, setCurrentShelf] = useState<Coord>();
 
@@ -216,11 +208,10 @@ export function App() {
         search_algorithm: parseInt(currentSearch),
       });
       console.log(json);
-
       try {
         const { data } = await api.post(`/api`, json, {
           headers: {
-            // Overwrite Axios's automatically set Content-Type
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           },
         });
@@ -233,20 +224,20 @@ export function App() {
         let roboResponse = data.robot;
         console.log(rotaResponse);
 
-        if(roboResponse==1){
-          roboResponse = 'R1'
+        if (roboResponse == 1) {
+          roboResponse = "R1";
         }
-        if(roboResponse==2){
-          roboResponse = 'R2'
+        if (roboResponse == 2) {
+          roboResponse = "R2";
         }
-        if(roboResponse==3){
-          roboResponse = 'R3'
+        if (roboResponse == 3) {
+          roboResponse = "R3";
         }
-        if(roboResponse==4){
-          roboResponse = 'R4'
+        if (roboResponse == 4) {
+          roboResponse = "R4";
         }
-        if(roboResponse==5){
-          roboResponse = 'R5'
+        if (roboResponse == 5) {
+          roboResponse = "R5";
         }
         moveRobot(rotaResponse, roboResponse);
       } catch (error) {
@@ -254,90 +245,6 @@ export function App() {
       }
     }
   }
-
-  const responseAPI: ResultApi = {
-    robo: "R3",
-    coordenadasRobo: {
-      linha: "13",
-      coluna: "3",
-    },
-    rota: [
-      { linha: 12, coluna: 3 },
-      { linha: 12, coluna: 2 },
-      { linha: 11, coluna: 2 },
-      { linha: 10, coluna: 2 },
-      { linha: 9, coluna: 2 },
-      { linha: 8, coluna: 2 },
-      { linha: 7, coluna: 2 },
-      { linha: 6, coluna: 2 },
-      { linha: 5, coluna: 2 },
-      { linha: 4, coluna: 2 },
-      { linha: 3, coluna: 2 },
-      { linha: 3, coluna: 1 },
-      { linha: 3, coluna: 2 },
-      { linha: 4, coluna: 2 },
-      { linha: 5, coluna: 2 },
-      { linha: 6, coluna: 2 },
-      { linha: 7, coluna: 2 },
-      { linha: 8, coluna: 2 },
-      { linha: 9, coluna: 2 },
-      { linha: 10, coluna: 2 },
-      { linha: 11, coluna: 2 },
-      { linha: 12, coluna: 2 },
-      { linha: 12, coluna: 3 },
-      { linha: 12, coluna: 4 },
-      { linha: 12, coluna: 5 },
-      { linha: 12, coluna: 6 },
-      { linha: 12, coluna: 7 },
-      { linha: 12, coluna: 9 },
-      { linha: 12, coluna: 10 },
-      { linha: 12, coluna: 11 },
-      { linha: 12, coluna: 12 },
-      { linha: 12, coluna: 13 },
-      { linha: 12, coluna: 14 },
-      { linha: 12, coluna: 15 },
-      { linha: 12, coluna: 14 },
-      { linha: 12, coluna: 13 },
-      { linha: 12, coluna: 12 },
-    ],
-  };
-
-  /*  const voltarRobo = [{ linha: 12, coluna: 3 }];
-
-  function levarPrateleira(linha: number, coluna: number) {
-    let levarPrateleiraCaminho: rotaProps[] = [];
-    const linhasTotais = board.length;
-    const colunasTotais = board[0].length;
-
-    let somarPosicaoColuna = 0;
-
-    const positionAux = board[linha].forEach((valor, i) => {
-      if (i == coluna - 1) {
-        return i;
-      }
-    });
-    if (positionAux != undefined) {
-      if (board[linha][positionAux + 1] == "") {
-        somarPosicaoColuna = 1;
-      } else {
-        somarPosicaoColuna = -1;
-      }
-    }
-    //levarPrateleiraCaminho.push({ linha: linha, coluna: coluna + somarPosicaoColuna });
-    while (linha < linhasTotais) {
-      levarPrateleiraCaminho.push({
-        linha: linha,
-        coluna: coluna + somarPosicaoColuna,
-      });
-      linha++;
-    }
-    while (coluna <= colunasTotais) {
-      levarPrateleiraCaminho.push({ linha: linha - 1, coluna: coluna });
-      coluna++;
-    }
-    console.log(levarPrateleiraCaminho);
-    moveRobot(levarPrateleiraCaminho);
-  } */
 
   const timer = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
@@ -347,8 +254,8 @@ export function App() {
     for (let index = 0; index < rota.length; index++) {
       const coord = rota[index];
 
-      const x = board.map((linha, i) => {
-        const z = linha.map((valor, j) => {
+      const matriz = board.map((linha, i) => {
+        const linhaArray = linha.map((valor, j) => {
           //se for encontrado um valor que é o mesmo nome do roboAUX limpar o campo
           if (valor == roboAux) {
             return "";
@@ -366,6 +273,7 @@ export function App() {
               String(j) == currentShelf?.coluna
             ) {
               roboAux = String(valor);
+              valor = "";
               return roboAux;
             }
             if (valor == "X") {
@@ -377,11 +285,11 @@ export function App() {
           }
         });
 
-        return z;
+        return linhaArray;
       });
 
       await timer(300);
-      setBoard(x);
+      setBoard(matriz);
     }
   }
 
@@ -435,8 +343,7 @@ export function App() {
                 linha={String(i)}
                 coluna={String(j)}
                 callback={(linha, coluna) => {
-                  setCurrentShelf({ linha, coluna });
-                  alert(currentShelf);
+                  setCurrentShelf({ linha, coluna })
                 }}
                 color={
                   currentShelf?.linha == String(i) &&
@@ -453,7 +360,6 @@ export function App() {
         name="Buscar"
         onHandleClick={() => {
           getByApi();
-          //moveRobot(responseAPI.rota);
         }}
       />
     </Container>
