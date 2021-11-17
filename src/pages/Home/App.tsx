@@ -250,11 +250,13 @@ export function App() {
 
   async function moveRobot(rota: rotaProps[], robo: string) {
     let roboAux = robo;
+    let boardAux = board;
+
 
     for (let index = 0; index < rota.length; index++) {
       const coord = rota[index];
 
-      const matriz = board.map((linha, i) => {
+      let matriz = boardAux.map((linha, i) => {
         const linhaArray = linha.map((valor, j) => {
           //se for encontrado um valor que é o mesmo nome do roboAUX limpar o campo
           if (valor == roboAux) {
@@ -270,14 +272,21 @@ export function App() {
             //se o robo estiver na mesma posição que a prateleira mudar o robo para o valor da prateleira
             if (
               String(i) == currentShelf?.linha &&
-              String(j) == currentShelf?.coluna
+              String(j) == currentShelf?.coluna 
+              
             ) {
-              roboAux = String(valor);
-              valor = "";
-              return roboAux;
+              if(valor.length>0){
+                roboAux = String(valor);
+                return roboAux;
+              }
+              else {
+                return robo;
+              }
             }
+            
             if (valor == "X") {
               roboAux = robo;
+              return 'X'
             }
             return roboAux;
           } else {
@@ -287,8 +296,8 @@ export function App() {
 
         return linhaArray;
       });
-
       await timer(300);
+      boardAux = matriz;
       setBoard(matriz);
     }
   }
