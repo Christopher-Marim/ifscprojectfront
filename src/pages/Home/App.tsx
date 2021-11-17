@@ -239,7 +239,7 @@ export function App() {
         if (roboResponse == 5) {
           roboResponse = "R5";
         }
-        moveRobot(rotaResponse, roboResponse);
+       // moveRobot(rotaResponse, roboResponse);
       } catch (error) {
         console.error(error);
       }
@@ -248,13 +248,54 @@ export function App() {
 
   const timer = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
-  async function moveRobot(rota: rotaProps[], robo: string) {
+  async function moveRobot() {
+    let robo= 'R5'
     let roboAux = robo;
+    let boardAux = board;
+
+     let rota = [
+      {linha:12, coluna: 4},
+      {linha:11, coluna: 4},
+      {linha:10, coluna: 4},
+      {linha:9, coluna: 4},
+      {linha:8, coluna: 3},
+      {linha:8, coluna: 4},
+      {linha:9, coluna: 4},
+      {linha:10, coluna: 4},
+      {linha:11, coluna: 4},
+      {linha:11, coluna: 4},
+      {linha:11, coluna: 5},
+      {linha:11, coluna: 6},
+      {linha:11, coluna: 7},
+      {linha:11, coluna: 8},
+      {linha:11, coluna: 9},
+      {linha:11, coluna: 10},
+      {linha:11, coluna: 11},
+      {linha:11, coluna: 12},
+      {linha:11, coluna: 13},
+      {linha:11, coluna: 14},
+      {linha:11, coluna: 13},
+      {linha:11, coluna: 12},
+      {linha:11, coluna: 11},
+      {linha:11, coluna: 10},
+      {linha:11, coluna: 9},
+      {linha:11, coluna: 8},
+      {linha:11, coluna: 7},
+      {linha:11, coluna: 6},
+      {linha:11, coluna: 5},
+      {linha:11, coluna: 4},
+      {linha:10, coluna: 4},
+      {linha:9, coluna: 4},
+      {linha:8, coluna: 4},
+      {linha:8, coluna: 3},
+      
+
+    ]
 
     for (let index = 0; index < rota.length; index++) {
       const coord = rota[index];
 
-      const matriz = board.map((linha, i) => {
+      let matriz = boardAux.map((linha, i) => {
         const linhaArray = linha.map((valor, j) => {
           //se for encontrado um valor que é o mesmo nome do roboAUX limpar o campo
           if (valor == roboAux) {
@@ -270,14 +311,21 @@ export function App() {
             //se o robo estiver na mesma posição que a prateleira mudar o robo para o valor da prateleira
             if (
               String(i) == currentShelf?.linha &&
-              String(j) == currentShelf?.coluna
+              String(j) == currentShelf?.coluna 
+              
             ) {
-              roboAux = String(valor);
-              valor = "";
-              return roboAux;
+              if(valor.length>0){
+                roboAux = String(valor);
+                return roboAux;
+              }
+              else {
+                return robo;
+              }
             }
+            
             if (valor == "X") {
               roboAux = robo;
+              return 'X'
             }
             return roboAux;
           } else {
@@ -287,8 +335,8 @@ export function App() {
 
         return linhaArray;
       });
-
       await timer(300);
+      boardAux = matriz;
       setBoard(matriz);
     }
   }
@@ -359,7 +407,7 @@ export function App() {
       <Button
         name="Buscar"
         onHandleClick={() => {
-          getByApi();
+          moveRobot();
         }}
       />
     </Container>
