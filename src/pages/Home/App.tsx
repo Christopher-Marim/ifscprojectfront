@@ -239,7 +239,7 @@ export function App() {
         if (roboResponse == 5) {
           roboResponse = "R5";
         }
-        moveRobot(rotaResponse, roboResponse);
+       // moveRobot(rotaResponse, roboResponse);
       } catch (error) {
         console.error(error);
       }
