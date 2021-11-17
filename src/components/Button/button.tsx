@@ -1,15 +1,23 @@
 import { useState } from "react";
 import { StylesButton } from "./styles";
 
-interface PropsButton {
+interface PropsButton extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   name: string;
+  onHandleClick(): void;
 }
 
-export function Button({ name }: PropsButton) {
+export function Button({ name, onHandleClick, ...rest }: PropsButton) {
   const [active, setActive] = useState(false);
 
+  function handleClick() {
+    onHandleClick();
+  }
   return (
-    <StylesButton onClick={()=> setActive(!active)} color={active ? "x" : ""}>
+    <StylesButton
+      {...rest}
+      onClick={() => handleClick()}
+      
+    >
       <span className="text">{name}</span>
     </StylesButton>
   );

@@ -1,24 +1,26 @@
 import { StylesButton } from "./styles";
 import { useState } from "react";
 
-interface PropsButton {
+interface PropsButton extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   name: string;
   linha:string;
   coluna:string;
+  callback(linha:string, coluna:string):void
 }
 
-export function Prateleira({ name, linha,coluna }: PropsButton) {
+export function Prateleira({ name, linha,coluna, callback, ...rest }: PropsButton) {
   const [active, setActive] = useState(false);
 
   function handleClickButton() {
-    if (name.length > 0) {
+    if (parseInt(name)) {
       setActive(!active);
-      alert(`Linha: ${linha}, Coluna: ${coluna}`)
+      callback(linha,coluna);
+      //alert(`Linha: ${linha}, Coluna: ${coluna}`)
     }
   }
 
   return (
-    <StylesButton onClick={handleClickButton} color={active ? "x" : ""}>
+    <StylesButton {...rest} onClick={handleClickButton}>
       <span className="text">{name}</span>
     </StylesButton>
   );
