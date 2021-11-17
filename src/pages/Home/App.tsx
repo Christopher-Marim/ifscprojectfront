@@ -252,7 +252,6 @@ export function App() {
     let roboAux = robo;
     let boardAux = board;
 
-
     for (let index = 0; index < rota.length; index++) {
       const coord = rota[index];
 
@@ -272,21 +271,19 @@ export function App() {
             //se o robo estiver na mesma posição que a prateleira mudar o robo para o valor da prateleira
             if (
               String(i) == currentShelf?.linha &&
-              String(j) == currentShelf?.coluna 
-              
+              String(j) == currentShelf?.coluna
             ) {
-              if(valor.length>0){
+              if (valor.length > 0) {
                 roboAux = String(valor);
                 return roboAux;
-              }
-              else {
+              } else {
                 return robo;
               }
             }
-            
+
             if (valor == "X") {
               roboAux = robo;
-              return 'X'
+              return "X";
             }
             return roboAux;
           } else {
@@ -352,7 +349,7 @@ export function App() {
                 linha={String(i)}
                 coluna={String(j)}
                 callback={(linha, coluna) => {
-                  setCurrentShelf({ linha, coluna })
+                  setCurrentShelf({ linha, coluna });
                 }}
                 color={
                   currentShelf?.linha == String(i) &&
