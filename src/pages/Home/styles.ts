@@ -9,8 +9,8 @@ export const Container = styled.div`
   align-items: center;
   padding: 0px 10rem;
   color: white;
-  @media (max-width: 768px) {
-    padding: 0px 2rem;
+  @media (max-width: 1200px) {
+    padding:2.5rem;
   }
 
   img {
@@ -21,6 +21,10 @@ export const Container = styled.div`
     top: 0;
     left: 0;
     left: 10px;
+
+    @media (max-width: 1200px) {
+      position: relative;
+  }
   }
 `;
 
@@ -48,6 +52,5 @@ export const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
   padding: 0px 0px;
 `;

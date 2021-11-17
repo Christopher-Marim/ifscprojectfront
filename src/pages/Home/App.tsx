@@ -15,6 +15,10 @@ interface Coord {
   linha: string;
   coluna: string;
 }
+interface responseRota {
+  x: number;
+  y: number;
+}
 interface ResultApi {
   robo: string;
   coordenadasRobo: Coord;
@@ -23,7 +27,7 @@ interface ResultApi {
 
 export function App() {
   const [active, setActive] = useState(false);
-  const [currentSearch, setCurrentSearch] = useState<String>();
+  const [currentSearch, setCurrentSearch] = useState<string>();
   const [currentShelf, setCurrentShelf] = useState<Coord>();
 
   const boardAux = [
@@ -205,9 +209,50 @@ export function App() {
   const [board, setBoard] = useState(boardAux);
 
   async function getByApi() {
+    if (currentShelf && currentSearch) {
+      const json = JSON.stringify({
+        shelf_x: parseInt(currentShelf?.linha),
+        shelf_y: parseInt(currentShelf?.coluna),
+        search_algorithm: parseInt(currentSearch),
+      });
+      console.log(json);
 
-   const {data} = await api.get(`/`);
-   
+      try {
+        const { data } = await api.post(`/api`, json, {
+          headers: {
+            // Overwrite Axios's automatically set Content-Type
+            "Content-Type": "application/json",
+          },
+        });
+        console.log(data);
+        const rotaResponse = data.search_path.map((item: responseRota) => {
+          const json = { linha: item.x, coluna: item.y };
+          return json;
+        });
+
+        let roboResponse = data.robot;
+        console.log(rotaResponse);
+
+        if(roboResponse==1){
+          roboResponse = 'R1'
+        }
+        if(roboResponse==2){
+          roboResponse = 'R2'
+        }
+        if(roboResponse==3){
+          roboResponse = 'R3'
+        }
+        if(roboResponse==4){
+          roboResponse = 'R4'
+        }
+        if(roboResponse==5){
+          roboResponse = 'R5'
+        }
+        moveRobot(rotaResponse, roboResponse);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 
   const responseAPI: ResultApi = {
@@ -296,9 +341,7 @@ export function App() {
 
   const timer = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
-  async function moveRobot(rota: rotaProps[]) {
-    const { robo } = responseAPI;
-
+  async function moveRobot(rota: rotaProps[], robo: string) {
     let roboAux = robo;
 
     for (let index = 0; index < rota.length; index++) {
@@ -316,18 +359,16 @@ export function App() {
           }
 
           //se a posição da linha e coluna forem igual a coordenada atual, retorna o nome do robo como nome do valor
-          if (i + 1 == coord.linha && j + 1 == coord.coluna) {
+          if (i == coord.linha && j == coord.coluna) {
             //se o robo estiver na mesma posição que a prateleira mudar o robo para o valor da prateleira
             if (
-              String(i + 1) == currentShelf?.linha &&
-              String(j + 1) == currentShelf?.coluna
+              String(i) == currentShelf?.linha &&
+              String(j) == currentShelf?.coluna
             ) {
               roboAux = String(valor);
-              console.log("dole");
               return roboAux;
             }
-            if (valor.includes('X')) {
-              valor = `X = ${roboAux}`;
+            if (valor == "X") {
               roboAux = robo;
             }
             return roboAux;
@@ -348,26 +389,41 @@ export function App() {
     <Container>
       <img src={image} alt="Logo" />
       <Wrapper>
-        <Button 
-        name="Busca em largura" 
-        onHandleClick={() => {setCurrentSearch('1')}} 
-        color={currentSearch=='1' ? "x" : ""} />
-        <Button 
-        name="Busca em Profundidade" 
-        onHandleClick={() => {setCurrentSearch('3')}} 
-        color={currentSearch=='3' ? "x" : ""} />
         <Button
-         name="Profundidade Iterativo" 
-         onHandleClick={() => {setCurrentSearch('4')}} 
-         color={currentSearch=='4' ? "x" : ""} />
-        <Button 
-        name="Busca Biderectional" 
-        onHandleClick={() => {setCurrentSearch('2')}} 
-        color={currentSearch=='2' ? "x" : ""} />
-        <Button 
-        name="Busca em A*" 
-        onHandleClick={() => {setCurrentSearch('0')}} 
-        color={currentSearch=='0' ? "x" : ""} />
+          name="Busca em largura"
+          onHandleClick={() => {
+            setCurrentSearch("1");
+          }}
+          color={currentSearch == "1" ? "x" : ""}
+        />
+        <Button
+          name="Busca em Profundidade"
+          onHandleClick={() => {
+            setCurrentSearch("3");
+          }}
+          color={currentSearch == "3" ? "x" : ""}
+        />
+        <Button
+          name="Profundidade Iterativo"
+          onHandleClick={() => {
+            setCurrentSearch("4");
+          }}
+          color={currentSearch == "4" ? "x" : ""}
+        />
+        <Button
+          name="Busca Biderectional"
+          onHandleClick={() => {
+            setCurrentSearch("2");
+          }}
+          color={currentSearch == "2" ? "x" : ""}
+        />
+        <Button
+          name="Busca em A*"
+          onHandleClick={() => {
+            setCurrentSearch("0");
+          }}
+          color={currentSearch == "0" ? "x" : ""}
+        />
       </Wrapper>
       <Main>
         {board.map((row, i) => (
@@ -376,10 +432,18 @@ export function App() {
               <Prateleira
                 key={j}
                 name={String(col)}
-                linha={String(i + 1)}
-                coluna={String(j + 1)}
-                callback={(linha,coluna)=>{setCurrentShelf({linha, coluna}); alert(currentShelf)}}
-                color={currentShelf?.linha==String(i + 1) && currentShelf?.coluna==String(j + 1) ? "x" : ""}
+                linha={String(i)}
+                coluna={String(j)}
+                callback={(linha, coluna) => {
+                  setCurrentShelf({ linha, coluna });
+                  alert(currentShelf);
+                }}
+                color={
+                  currentShelf?.linha == String(i) &&
+                  currentShelf?.coluna == String(j)
+                    ? "x"
+                    : ""
+                }
               />
             ))}
           </div>
@@ -388,7 +452,8 @@ export function App() {
       <Button
         name="Buscar"
         onHandleClick={() => {
-            moveRobot(responseAPI.rota);         
+          getByApi();
+          //moveRobot(responseAPI.rota);
         }}
       />
     </Container>
